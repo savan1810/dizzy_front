@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'CustomFont';
+  src: url('/public/fonts/sequel-sans-roman-body.ttf') format('truetype');
+  /* src: url('/public/fonts/sequel-sans-roman-disp.ttf') format('truetype'); */
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  margin: 0;
+  /* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif; */
+    font-family: 'CustomFont', sans-serif;
+    /* font-family: sans-serif; */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: black;
+  /* overflow: hidden; */
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.no-scroll {
+  overflow: hidden;
+}
+
+.scrollable-section {
+  overflow-y: scroll;
+}
+
+.scrollable-section::-webkit-scrollbar {
+  display: block;
+  width: 2px; /* Adjust scrollbar width */
+}
+
+.scrollable-section::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 1); /* Customize scrollbar thumb */
+  border-radius: 10px; /* Optional: rounded scrollbar thumb */
+  width: 2px;
+}
+
+.scrollable-section::-webkit-scrollbar-track {
+  background-color: rgba(255, 255, 255, 0.1); /* Customize scrollbar track */
+  width: 2px;
+
+}
+
+::-webkit-scrollbar {
+  width: 0;  /* Remove scrollbar space */
+  background: transparent;  /* Optional: just make scrollbar invisible */
+}
+
+.placeholder-custom::placeholder {
+  color: rgba(255, 255, 255, 0.6); /* Customize the color and opacity here */
+  opacity: 1; /* Ensures the placeholder is fully opaque in Safari */
+}
