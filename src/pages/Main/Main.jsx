@@ -128,10 +128,13 @@ export default function Main() {
     const [videoPopupOpen, setVideoPopupOpen] = useState(false);
     const [isPlaying, setIsPlaying] = useState(false);
     const videoRef = useRef(null); // Reference to the video element
+
     let getPublishVideoMessage = videoMessage?.length > 0 && videoMessage?.filter((item) => item.saveType === 'post-on-page');
     const navigation = useNavigate()
 
     let socialApiCall = useSelector((state) => state.user.socialApiCall);
+
+   
 
     useEffect(() => {
         if (token && !socialApiCall) {
@@ -193,6 +196,36 @@ export default function Main() {
             setFormOverlay(false);
         }
     };
+
+    const EditSectionName=(section,title)=>{
+        try{
+
+            const updatedArray = articlDataDefault.map((item) => {
+                if (item.type === section) {
+                  return {
+                    ...item,
+                    title: title, 
+                  };
+                }
+                return item;
+              });
+          
+              console.log('Updated Array:', updatedArray,section);
+            
+            setArticlDataDefault(updatedArray);
+            dispatch(update_user_article_thunk({ token, body: { ...userArticle, articlDataDefault: updatedArray } }));
+            setMusicOverlay(false);
+            setVideoOverlay(false);
+            setProductOverlay(false);
+            setEventOverlay(false);
+            setSocialfeedOverlay(false);
+            setPlaylistOverlay(false);
+            setFormOverlay(false);
+        }
+        catch(error){
+            console.log('error', error);
+        }
+    }
     // Function to move 'music' down in the array
     // Example usage for music
     const moveMusicUp = () => moveSection('music', 'up');
@@ -234,19 +267,19 @@ export default function Main() {
     };
 
 
+
     const sections = {
-        music: music?.length > 0 && <Music userArticle={userArticle} music={music} setMusicOverlay={setMusicOverlay} title={articlDataDefault.find(item => item.type === 'music')?.title} />,
-        event: event?.length > 0 && <Event userArticle={userArticle} event={event} setOverlay={setEventOverlay} title={articlDataDefault.filter(item => item.type === 'event')?.title} />,
-        product: product?.length > 0 && <Product userArticle={userArticle} product={product} setOverlay={setProductOverlay} title={articlDataDefault.filter(item => item.type === 'product')?.title} />,
-        video: video?.length > 0 && <Video userArticle={userArticle} video={video} setOverlay={setVideoOverlay} title={articlDataDefault.filter(item => item.type === 'video')?.title} />,
-        socialfeed: socialfeed?.length > 0 && <Socialfeed userArticle={userArticle} socialfeed={socialfeed} setOverlay={setSocialfeedOverlay} title={articlDataDefault.filter(item => item.type === 'socialfeed')?.title} />,
-        playlist: playlist?.length > 0 && <Playlist userArticle={userArticle} playlist={playlist} setOverlay={setPlaylistOverlay} title={articlDataDefault.filter(item => item.type === 'playlist')?.title} />,
-        form: form?.length > 0 && <Form userArticle={userArticle} form={form} setOverlay={setFormOverlay} title={articlDataDefault.filter(item => item.type === 'form')?.title} />,
+        music: music?.length > 0 && <Music userArticle={userArticle} music={music} setMusicOverlay={setMusicOverlay} title={articlDataDefault.find(item => item.type === 'music')?.title}  />,
+        event: event?.length > 0 && <Event userArticle={userArticle} event={event} setOverlay={setEventOverlay} title={articlDataDefault.find(item => item.type === 'event')?.title} />,
+        product: product?.length > 0 && <Product userArticle={userArticle} product={product} setOverlay={setProductOverlay} title={articlDataDefault.find(item => item.type === 'product')?.title} />,
+        video: video?.length > 0 && <Video userArticle={userArticle} video={video} setOverlay={setVideoOverlay} title={articlDataDefault.find(item => item.type === 'video')?.title} />,
+        socialfeed: socialfeed?.length > 0 && <Socialfeed userArticle={userArticle} socialfeed={socialfeed} setOverlay={setSocialfeedOverlay} title={articlDataDefault.find(item => item.type === 'socialfeed')?.title} />,
+        playlist: playlist?.length > 0 && <Playlist userArticle={userArticle} playlist={playlist} setOverlay={setPlaylistOverlay} title={articlDataDefault.find(item => item.type === 'playlist')?.title} />,
+        form: form?.length > 0 && <Form userArticle={userArticle} form={form} setOverlay={setFormOverlay} title={articlDataDefault.find(item => item.type === 'form')?.title} />,
     }
 
     return (
         <LayoutHeader>
-
             <div className="w-[350px] sm:max-w-[390px] pb-[100px] h-full flex flex-col justify-start items-center relative rounded-[20px] bg-black" >
                 <div className='flex py-4 z-1 ml-4 w-full justify-center items-center text-white'>
                     <div className="cursor-pointer mx-auto flex justify-center items-center gap-x-[4px]" onClick={() => window.open(`https://diz.ee/${userArticle?.domain}`, '_blank')}>
@@ -323,8 +356,6 @@ export default function Main() {
                             </div>
                             <p>Privacy Policy</p>
                         </div>
-
-
                     </div>
                 </div>
             </div>
@@ -566,23 +597,22 @@ export default function Main() {
                     </div>
                 </div>
             )}
-
             {
                 photoOverlay && <PhotoOverlay userArticle={userArticle} />
             }
-            {musicOverlay && <MusicOverlay userArticle={userArticle} setOverlay={setMusicOverlay} onMoveUp={moveMusicUp} onMoveDown={moveMusicDown} onEdit={'add-section/add-music'} />}
+            {musicOverlay && <MusicOverlay userArticle={userArticle} setOverlay={setMusicOverlay} onMoveUp={moveMusicUp} onMoveDown={moveMusicDown} onEdit={'add-section/add-music'} {...{EditSectionName,type:"music"}}/>}
 
-            {videoOverlay && <MusicOverlay userArticle={userArticle} setOverlay={setVideoOverlay} onMoveUp={moveVideoUp} onMoveDown={moveVideoDown} onEdit={'add-section/add-video'} />}
+            {videoOverlay && <MusicOverlay userArticle={userArticle} setOverlay={setVideoOverlay} onMoveUp={moveVideoUp} onMoveDown={moveVideoDown} onEdit={'add-section/add-video'}  {...{EditSectionName,type:"video"}}/>}
 
-            {productOverlay && <MusicOverlay userArticle={userArticle} setOverlay={setProductOverlay} onMoveUp={moveProductUp} onMoveDown={moveProductDown} onEdit={'add-section/add-product'} />}
+            {productOverlay && <MusicOverlay userArticle={userArticle} setOverlay={setProductOverlay} onMoveUp={moveProductUp} onMoveDown={moveProductDown} onEdit={'add-section/add-product'}  {...{EditSectionName,type:"product"}}/>}
 
-            {eventOverlay && <MusicOverlay userArticle={userArticle} setOverlay={setEventOverlay} onMoveUp={moveEventUp} onMoveDown={moveEventDown} onEdit={'add-section/add-event'} />}
+            {eventOverlay && <MusicOverlay userArticle={userArticle} setOverlay={setEventOverlay} onMoveUp={moveEventUp} onMoveDown={moveEventDown} onEdit={'add-section/add-event'}  {...{EditSectionName,type:"event"}}/>}
 
-            {socialfeedOverlay && <MusicOverlay userArticle={userArticle} setOverlay={setSocialfeedOverlay} onMoveUp={moveSocialfeedUp} onMoveDown={moveSocialfeedDown} onEdit={'add-section/add-socialfeed'} />}
+            {socialfeedOverlay && <MusicOverlay userArticle={userArticle} setOverlay={setSocialfeedOverlay} onMoveUp={moveSocialfeedUp} onMoveDown={moveSocialfeedDown} onEdit={'add-section/add-socialfeed'}  {...{EditSectionName,type:"socialfeed"}}/>}
 
-            {playlistOverlay && <MusicOverlay userArticle={userArticle} setOverlay={setPlaylistOverlay} onMoveUp={movePlaylistUp} onMoveDown={movePlaylistDown} onEdit={'add-section/add-playlist'} />}
+            {playlistOverlay && <MusicOverlay userArticle={userArticle} setOverlay={setPlaylistOverlay} onMoveUp={movePlaylistUp} onMoveDown={movePlaylistDown} onEdit={'add-section/add-playlist'}  {...{EditSectionName,type:"playlist"}}/>}
 
-            {formOverlay && <MusicOverlay userArticle={userArticle} setOverlay={setFormOverlay} onMoveUp={moveFormUp} onMoveDown={moveFormDown} onEdit={'add-section/add-form'} />}
+            {formOverlay && <MusicOverlay userArticle={userArticle} setOverlay={setFormOverlay} onMoveUp={moveFormUp} onMoveDown={moveFormDown} onEdit={'add-section/add-form'}  {...{EditSectionName,type:"form"}}/>}
 
             {
                 videoPopupOpen && (
@@ -614,6 +644,6 @@ export default function Main() {
                     </div>
                 )
             }
-        </LayoutHeader >
+        </LayoutHeader>
     );
 }
