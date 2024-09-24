@@ -600,19 +600,19 @@ export default function Main() {
             {
                 photoOverlay && <PhotoOverlay userArticle={userArticle} />
             }
-            {musicOverlay && <MusicOverlay userArticle={userArticle} setOverlay={setMusicOverlay} onMoveUp={moveMusicUp} onMoveDown={moveMusicDown} onEdit={'add-section/add-music'} {...{EditSectionName,type:"music"}}/>}
+            {musicOverlay && <MusicOverlay userArticle={userArticle} setOverlay={setMusicOverlay} onMoveUp={moveMusicUp} onMoveDown={moveMusicDown} onEdit={'add-section/add-music'} {...{EditSectionName,type:"music"}} title={articlDataDefault.find(item => item.type === 'music')?.title}/>}
 
-            {videoOverlay && <MusicOverlay userArticle={userArticle} setOverlay={setVideoOverlay} onMoveUp={moveVideoUp} onMoveDown={moveVideoDown} onEdit={'add-section/add-video'}  {...{EditSectionName,type:"video"}}/>}
+            {videoOverlay && <MusicOverlay userArticle={userArticle} setOverlay={setVideoOverlay} onMoveUp={moveVideoUp} onMoveDown={moveVideoDown} onEdit={'add-section/add-video'}  {...{EditSectionName,type:"video"}} title={articlDataDefault.find(item => item.type === 'video')?.title}/>}
 
-            {productOverlay && <MusicOverlay userArticle={userArticle} setOverlay={setProductOverlay} onMoveUp={moveProductUp} onMoveDown={moveProductDown} onEdit={'add-section/add-product'}  {...{EditSectionName,type:"product"}}/>}
+            {productOverlay && <MusicOverlay userArticle={userArticle} setOverlay={setProductOverlay} onMoveUp={moveProductUp} onMoveDown={moveProductDown} onEdit={'add-section/add-product'}  {...{EditSectionName,type:"product"}} title={articlDataDefault.find(item => item.type === 'product')?.title}/>}
 
-            {eventOverlay && <MusicOverlay userArticle={userArticle} setOverlay={setEventOverlay} onMoveUp={moveEventUp} onMoveDown={moveEventDown} onEdit={'add-section/add-event'}  {...{EditSectionName,type:"event"}}/>}
+            {eventOverlay && <MusicOverlay userArticle={userArticle} setOverlay={setEventOverlay} onMoveUp={moveEventUp} onMoveDown={moveEventDown} onEdit={'add-section/add-event'}  {...{EditSectionName,type:"event"}} title={articlDataDefault.find(item => item.type === 'event')?.title}/>}
 
-            {socialfeedOverlay && <MusicOverlay userArticle={userArticle} setOverlay={setSocialfeedOverlay} onMoveUp={moveSocialfeedUp} onMoveDown={moveSocialfeedDown} onEdit={'add-section/add-socialfeed'}  {...{EditSectionName,type:"socialfeed"}}/>}
+            {socialfeedOverlay && <MusicOverlay userArticle={userArticle} setOverlay={setSocialfeedOverlay} onMoveUp={moveSocialfeedUp} onMoveDown={moveSocialfeedDown} onEdit={'add-section/add-socialfeed'}  {...{EditSectionName,type:"socialfeed"}} title={articlDataDefault.find(item => item.type === 'socialfeed')?.title}/>}
 
-            {playlistOverlay && <MusicOverlay userArticle={userArticle} setOverlay={setPlaylistOverlay} onMoveUp={movePlaylistUp} onMoveDown={movePlaylistDown} onEdit={'add-section/add-playlist'}  {...{EditSectionName,type:"playlist"}}/>}
+            {playlistOverlay && <MusicOverlay userArticle={userArticle} setOverlay={setPlaylistOverlay} onMoveUp={movePlaylistUp} onMoveDown={movePlaylistDown} onEdit={'add-section/add-playlist'}  {...{EditSectionName,type:"playlist"}} title={articlDataDefault.find(item => item.type === 'playlist')?.title}/>}
 
-            {formOverlay && <MusicOverlay userArticle={userArticle} setOverlay={setFormOverlay} onMoveUp={moveFormUp} onMoveDown={moveFormDown} onEdit={'add-section/add-form'}  {...{EditSectionName,type:"form"}}/>}
+            {formOverlay && <MusicOverlay userArticle={userArticle} setOverlay={setFormOverlay} onMoveUp={moveFormUp} onMoveDown={moveFormDown} onEdit={'add-section/add-form'}  {...{EditSectionName,type:"form"}} title={articlDataDefault.find(item => item.type === 'form')?.title}/>}
 
             {
                 videoPopupOpen && (

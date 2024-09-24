@@ -6,9 +6,11 @@ import CopyLink from '../../../../../svg/CopyLink';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearAlerts, setErrorAlert, setLoader } from '../../../../../store/alert/alertSlice';
 import { addEventToSectionThunk, addVideoToSectionThunk, getEventThunk, getVideoThunk } from '../../../../../store/addsection/addsectionThunk';
-import { clearEvent, updateLink, updateLocation, updateVenue } from '../../../../../store/eventData/eventdataSlice';
+import { clearEvent, updateLink, updateLocation, updateVenue,updateImage } from '../../../../../store/eventData/eventdataSlice';
 import AddedEvent from '../../../../../components/AddSection/Event/AddedEvent';
 import EventOverlay from '../../../../../components/AddSection/Event/EventOverlay';
+import ImageSelectionCard from '../../../../../components/ImageSelectionCard';
+import { uploadImage } from '../../../../../utils/upload';
 
 export default function CustomEvent() {
     const navigate = useNavigate();
@@ -30,6 +32,9 @@ export default function CustomEvent() {
     const previousUrl = useSelector((state) => state.eventdata.previousUrl);
     const previousSource = useSelector((state) => state.eventdata.previousSource);
     const type = useSelector((state) => state.eventdata.type);
+
+    const [selectedImage, setSelectedImage] = useState(null);
+    const [imagePreview, setImagePreview] = useState(null);
 
     useEffect(() => {
         if (eventDate) {
@@ -56,7 +61,7 @@ export default function CustomEvent() {
         return false;
     };
 
-    const handleAddCustomEvent = () => {
+    const handleAddCustomEvent =async () => {
         const isExistLink = filterLink(link);
         dispatch(clearAlerts());
         if (!previousUrl) {
@@ -65,17 +70,27 @@ export default function CustomEvent() {
                 return;
             }
         }
-        if (!link || !eventDate || !formattedDate || !eventVenue || !evntLocation) {
+        if (!link || !eventDate || !formattedDate || (!selectedImage && !imagePreview) || !eventVenue || !evntLocation) {
             dispatch(setErrorAlert('Please fill all the fields'));
             return;
         }
 
         // dispatch(setLoader(true));
+        let url = '';
+        if (selectedImage) {
+            url = await uploadImage(selectedImage)
+            if (!url) {
+                dispatch(setErrorAlert('Image cannot contain nudity , violence or drugs'));
+                return
+
+            }
+        }
         let payload = {
             type: type ? type : 2,
             location: evntLocation,
             venue: eventVenue,
             date: formattedDate,
+            image: url ? url : imagePreview,
             links: [
                 {
                     source: previousSource ? previousSource : 'custom',
@@ -88,6 +103,8 @@ export default function CustomEvent() {
         setFormattedDate('');
         dispatch(addEventToSectionThunk({ token: token, payload: payload, previousUrl: previousUrl })).then(() => {
             dispatch(getEventThunk({ token: token }));
+            setSelectedImage(null)
+            setImagePreview(null)
             // navigate('/add-section/import-single-event');
         });
     };
@@ -95,6 +112,17 @@ export default function CustomEvent() {
     const handleGoBack = () => {
         dispatch(clearEvent());
         navigate('/add-section/add-event');
+    };
+
+    const handleImageChange = (event) => {
+        const file = event.target.files[0];
+        setSelectedImage(file);
+        setImagePreview(URL.createObjectURL(file));
+    };
+
+    const resetImage = () => {
+        setSelectedImage(null);
+        setImagePreview(null);
     };
 
     return (
@@ -146,6 +174,7 @@ export default function CustomEvent() {
                                 />
                             </div>
                         </div>
+                       
                         {!formattedDate ?
                             <div className='p-4 flex w-full justify-between items-center' >
                                 <div className='items-center flex flex-row text-white w-full'>
@@ -175,6 +204,13 @@ export default function CustomEvent() {
                             </div>
 
                         }
+                        <ImageSelectionCard
+                            txt="Add cover image"
+                            dotimgclss={false}
+                            onImageChange={handleImageChange}
+                            imagePreview={imagePreview}
+                            resetImage={resetImage}
+                        />
                         {/* {
                             loading ? <ClipLoader
                                 color="white"
@@ -200,7 +236,7 @@ export default function CustomEvent() {
                     </div>}
                 </div>
             </div>
-            {isOverlayVisible && <EventOverlay isOverlayVisible={isOverlayVisible} setOverlayVisible={setOverlayVisible} linkForBackend={linkForBackend} itemForBackend={itemForBackend} />}
+            {isOverlayVisible && <EventOverlay isOverlayVisible={isOverlayVisible} setOverlayVisible={setOverlayVisible} linkForBackend={linkForBackend} itemForBackend={itemForBackend} setImagePreview={setImagePreview} setSelectedImage={setSelectedImage}/>}
         </LayoutHeader>
     );
 }

@@ -19,6 +19,8 @@ import EventOverlay from '../../../../../components/AddSection/Event/EventOverla
 import AddedEvent from '../../../../../components/AddSection/Event/AddedEvent';
 import AddSinglEvent from '../../../../../components/AddSection/Event/AddSinglEvent';
 import { clearEvent, updateLink, updateLocation, updateVenue } from '../../../../../store/eventData/eventdataSlice';
+import { uploadImage } from '../../../../../utils/upload';
+import ImageSelectionCard from '../../../../../components/ImageSelectionCard';
 
 const componentMapping = {
     bandsintown: <Bandsintown />,
@@ -51,6 +53,10 @@ export default function ImportLink() {
     const previousUrl = useSelector((state) => state.eventdata.previousUrl);
     const previousSource = useSelector((state) => state.eventdata.previousSource);
     const type = useSelector((state) => state.eventdata.type);
+
+    const [selectedImage, setSelectedImage] = useState(null);
+    const [imagePreview, setImagePreview] = useState(null);
+
 
 
     useEffect(() => {
@@ -123,7 +129,7 @@ export default function ImportLink() {
     };
 
 
-    const handleAddSingleEvent = () => {
+    const handleAddSingleEvent =async () => {
         const isExistLink = filterLink(link);
         dispatch(clearAlerts());
         if (!previousUrl) {
@@ -132,17 +138,27 @@ export default function ImportLink() {
                 return;
             }
         }
-        if (!link || !eventDate || !formattedDate || !eventVenue || !evntLocation) {
+        if (!link || !eventDate || !formattedDate || !eventVenue ||(!selectedImage && !imagePreview) || !evntLocation) {
             dispatch(setErrorAlert('Please fill all the fields'));
             return;
         }
 
+        let url = '';
+        if (selectedImage) {
+            url = await uploadImage(selectedImage)
+            if (!url) {
+                dispatch(setErrorAlert('Image cannot contain nudity , violence or drugs'));
+                return
+
+            }
+        }
         // dispatch(setLoader(true));
         let payload = {
             type: type ? type : 1,
             location: evntLocation,
             venue: eventVenue,
             date: formattedDate,
+            image: url ? url : imagePreview,
             links: [
                 {
                     source: previousSource ? previousSource : iconKey,
@@ -155,6 +171,8 @@ export default function ImportLink() {
         setFormattedDate('');
         dispatch(addEventToSectionThunk({ token: token, payload: payload, previousUrl: previousUrl })).then(() => {
             dispatch(getEventThunk({ token: token }));
+            setSelectedImage(null)
+            setImagePreview(null)
             // navigate('/add-section/import-single-event');
         });
     };
@@ -162,6 +180,17 @@ export default function ImportLink() {
     const handleGoBack = () => {
         dispatch(clearEvent());
         navigate('/add-section/import-single-event');
+    };
+
+    const handleImageChange = (event) => {
+        const file = event.target.files[0];
+        setSelectedImage(file);
+        setImagePreview(URL.createObjectURL(file));
+    };
+
+    const resetImage = () => {
+        setSelectedImage(null);
+        setImagePreview(null);
     };
 
     return (
@@ -245,6 +274,13 @@ export default function ImportLink() {
                             </div>
 
                         }
+                        <ImageSelectionCard
+                            txt="Add cover image"
+                            dotimgclss={false}
+                            onImageChange={handleImageChange}
+                            imagePreview={imagePreview}
+                            resetImage={resetImage}
+                        />
                         {/* {
                             loading ? <ClipLoader
                                 color="white"
@@ -270,7 +306,7 @@ export default function ImportLink() {
                     </div>}
                 </div>
             </div>
-            {isOverlayVisible && <EventOverlay isOverlayVisible={isOverlayVisible} setOverlayVisible={setOverlayVisible} linkForBackend={linkForBackend} itemForBackend={itemForBackend} />}
+            {isOverlayVisible && <EventOverlay isOverlayVisible={isOverlayVisible} setOverlayVisible={setOverlayVisible} linkForBackend={linkForBackend} itemForBackend={itemForBackend} setImagePreview={setImagePreview} setSelectedImage={setSelectedImage}/>}
         </LayoutHeader >
     );
 }

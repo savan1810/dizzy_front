@@ -21,7 +21,7 @@ export default function AddEvent() {
 
                 <SelectionCard txt="Bulk import events" dotimgclss={false} link={'/add-section/bulk-import-events'} />
                 <SelectionCard txt="Manual event entry" dotimgclss={false} link={'/add-section/import-single-event'} />
-                {/* <SelectionCard txt="Custom event link" dotimgclss={false} link={'/add-section/custom-event-link'} /> */}
+                <SelectionCard txt="Custom event link" dotimgclss={false} link={'/add-section/custom-event-link'} />
 
 
 

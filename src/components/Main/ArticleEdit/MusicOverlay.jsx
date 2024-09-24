@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 
 export default function MusicOverlay(props) {
     const navigate = useNavigate();
-    const { setOverlay, onMoveUp, onMoveDown, onEdit,EditSectionName ,type} = props
+    const { setOverlay, onMoveUp, onMoveDown, onEdit,EditSectionName ,type,title} = props
     const handleOverlayClick = (e) => {
         if (e.target.id === 'overlay') {
             setOverlay(false);
@@ -12,7 +12,7 @@ export default function MusicOverlay(props) {
 
     console.log('type',type)
 
-    const [sectionTitle,setSectionTitle] = useState('');
+    const [sectionTitle,setSectionTitle] = useState(title);
     
     const handleChange = (e) => {
         const { name, value } = e.target;

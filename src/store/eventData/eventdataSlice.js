@@ -7,7 +7,8 @@ const initialState = {
     date: '',
     previousUrl: '',
     previousSource: '',
-    type: null
+    type: null,
+    image:''
 }
 
 const slice = createSlice({
@@ -35,6 +36,9 @@ const slice = createSlice({
         updateType: (state, action) => {
             state.type = action.payload
         },
+        updateImage: (state, action) => {
+            state.image = action.payload
+        },
         clearEvent: (state) => {
             state.date = ''
             state.venue = ''
@@ -47,6 +51,6 @@ const slice = createSlice({
     }
 })
 
-export const { updateLink, updateLocation, updateVenue, updateEventDate, clearEvent, updatePreviousUrl, updatePreviousSource, updateType } = slice.actions;
+export const { updateLink, updateLocation,updateImage, updateVenue, updateEventDate, clearEvent, updatePreviousUrl, updatePreviousSource, updateType } = slice.actions;
 
 export default slice.reducer;
